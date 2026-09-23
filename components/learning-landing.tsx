@@ -150,7 +150,7 @@ export function LearningLanding() {
 
     setTimeout(() => {
       setBookingStatus('success')
-    }, 10000)
+    }, 5000)
   }
 
   return (
