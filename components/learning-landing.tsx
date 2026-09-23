@@ -25,7 +25,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-const ADMIN_WHATSAPP_NUMBER = '917006389268'
+const ADMIN_WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER
 
 const bookingSchema = z.object({
   fullName: z.string().trim().min(2, 'Please enter your name.'),
