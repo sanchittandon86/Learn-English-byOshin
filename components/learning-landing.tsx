@@ -127,11 +127,29 @@ export function LearningLanding() {
 
     const formattedPhone = `${result.data.phone.slice(0, 5)} ${result.data.phone.slice(5)}`
     const message = `New Session Booking Request\n\nHi, you have a new request for an English Learning session.\n\nStudent Details\n Name: ${result.data.fullName}\n Phone: +91 ${formattedPhone}\n Session: English Learning\n\nPlease reach out to the student to discuss availability and confirm the session.`
-    const waUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+    const encodedMessage = encodeURIComponent(message)
+    const waAppUrl = `whatsapp://send?phone=${ADMIN_WHATSAPP_NUMBER}&text=${encodedMessage}`
+    const waWebUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodedMessage}`
+
+    // Try the native app first: whatsapp:// isn't a real web URL, so setting
+    // location.href to it hands off to the OS without navigating this page
+    // away (no stray browser tab). Fall back to the web link only if the app
+    // doesn't pick it up (desktop, or WhatsApp not installed) — detected via
+    // whether the tab actually got backgrounded shortly after.
+    let appOpened = false
+    const onVisibilityChange = () => {
+      if (document.hidden) appOpened = true
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    window.location.href = waAppUrl
+
+    setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+      if (!appOpened) window.location.href = waWebUrl
+    }, 1500)
 
     setTimeout(() => {
       setBookingStatus('success')
-      window.location.href = waUrl
     }, 10000)
   }
 
