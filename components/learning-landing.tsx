@@ -132,7 +132,7 @@ export function LearningLanding() {
     setTimeout(() => {
       setBookingStatus('success')
       window.location.href = waUrl
-    }, 400)
+    }, 10000)
   }
 
   return (
