@@ -3,7 +3,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { z } from 'zod'
 import {
-  AlertCircle,
   ArrowRight,
   Briefcase,
   CheckCircle2,
@@ -90,7 +89,6 @@ export function LearningLanding() {
   const [phone, setPhone] = useState('')
   const [consent, setConsent] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-  const [popupBlockedUrl, setPopupBlockedUrl] = useState<string | null>(null)
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -105,7 +103,6 @@ export function LearningLanding() {
     setPhone('')
     setConsent(false)
     setFieldErrors({})
-    setPopupBlockedUrl(null)
   }
 
   function handleBookingOpenChange(open: boolean) {
@@ -133,13 +130,8 @@ export function LearningLanding() {
     const waUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
 
     setTimeout(() => {
-      const opened = window.open(waUrl, '_blank')
-      if (!opened) {
-        setPopupBlockedUrl(waUrl)
-        setBookingStatus('idle')
-        return
-      }
       setBookingStatus('success')
+      window.location.href = waUrl
     }, 400)
   }
 
@@ -243,13 +235,6 @@ export function LearningLanding() {
                   </label>
                   {fieldErrors.consent && <p className="text-xs text-red-600">{fieldErrors.consent}</p>}
                 </div>
-
-                {popupBlockedUrl && (
-                  <div className="flex items-start gap-2 rounded-lg bg-amber-50 p-3 text-xs text-amber-800">
-                    <AlertCircle className="mt-0.5 size-4 shrink-0" />
-                    <span>Your browser blocked the WhatsApp popup. <a href={popupBlockedUrl} target="_blank" rel="noopener noreferrer" className="font-semibold underline">Tap here to open WhatsApp</a> and send your request.</span>
-                  </div>
-                )}
 
                 <Button type="submit" disabled={bookingStatus === 'submitting'} className="h-12 w-full rounded-xl bg-brand-primary hover:bg-brand-primary-hover">
                   {bookingStatus === 'submitting' ? <><Loader2 className="size-4 animate-spin" /> Sending...</> : 'Book my free session'}
